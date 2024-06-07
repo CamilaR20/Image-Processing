@@ -4,9 +4,7 @@ import sys
 import os
 
 if __name__ == '__main__':
-    path = sys.argv[1]
-    image_name = sys.argv[2]
-    path_file = os.path.join(path, image_name)
+    path_file = os.path.join(os.path.dirname(__file__), 'imgs/lena.png')
     image = cv2.imread(path_file)
 
     # resizing
@@ -45,5 +43,5 @@ if __name__ == '__main__':
     M_affine = cv2.getAffineTransform(pts1, pts2)
     image_affine = cv2.warpAffine(image, M_affine, image.shape[:2])
 
-    cv2.imshow("Image", image_affine)
+    cv2.imshow("Image after affine transformation", image_affine)
     cv2.waitKey(0)

@@ -4,9 +4,7 @@ import sys
 import os
 
 if __name__ == '__main__':
-    path = sys.argv[1]
-    image_name = sys.argv[2]
-    path_file = os.path.join(path, image_name)
+    path_file = os.path.join(os.path.dirname(__file__), 'imgs/lena.png')
     image = cv2.imread(path_file)
     image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     image_draw = np.copy(image)
@@ -18,7 +16,7 @@ if __name__ == '__main__':
 
     # Shi-Tomasi
     corners = cv2.goodFeaturesToTrack(image_gray, 100, 0.0001, 10)
-    corners = corners.astype(np.int)
+    corners = corners.astype(int)
     for i in corners:
         x, y = i.ravel()
         cv2.circle(image_draw, (x, y), 3, [255, 0, 0], -1)

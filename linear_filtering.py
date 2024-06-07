@@ -4,11 +4,11 @@ from noise import noise
 import os
 
 if __name__ == '__main__':
-    image = cv2.imread("imgs/lena.png")
+    image = cv2.imread(os.path.join(os.path.dirname(__file__), 'imgs/lena.png'))
     image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     # add noise
-    image_gray_noisy = noise("s&p", image_gray.astype(np.float) / 255)
+    image_gray_noisy = noise("s&p", image_gray.astype(float) / 255)
     image_gray_noisy = (255 * image_gray_noisy).astype(np.uint8)
 
     # window size
@@ -36,7 +36,7 @@ if __name__ == '__main__':
     # 5) gaussian band-pass
     image_gauss_1 = cv2.GaussianBlur(image_gray, (N, N), 0.5, 0.5)
     image_gauss_2 = cv2.GaussianBlur(image_gray, (N, N), 2.5, 2.5)
-    image_gauss_bp = (np.abs(image_gauss_2.astype(np.float) - image_gauss_1.astype(np.float))).astype(np.uint8)
+    image_gauss_bp = (np.abs(image_gauss_2.astype(float) - image_gauss_1.astype(float))).astype(np.uint8)
 
     cv2.imshow("Filtered image", image_gauss_bp)
     cv2.waitKey(0)

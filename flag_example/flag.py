@@ -5,35 +5,35 @@ from sklearn.utils import shuffle
 from hough import hough
 
 
-class Bandera:
+class Flag:
     def __init__(self, im):
-        # Recibe una imagen y la guarda en el objeto
+        # Receives an image and stores it in the object
         self.im = im
         self.width, self.height, self.ch = im.shape
         assert self.ch == 3
 
     def colores(self):
-        # Retorna el numero de colores de la imagen de entrada
-        # Cambia imágen a representación RGB y a flotante
+        # Returns the number of colors of the image
+        # Changes image to RGB and floating point representation
         im_rgb = cv2.cvtColor(self.im, cv2.COLOR_BGR2RGB)
         im_rgb = np.array(self.im, dtype=np.float64) / 255
 
-        # Guarda la imagen convertida a un arreglo de 2D
+        # Saves image in 2D array
         self.im_array = np.reshape(im_rgb, (self.width * self.height, self.ch))
-        # Función para encontrar el número de colores
+        # Find the number of colors
         self.n_color, self.centers, self.labels = color_seg(self.im_array)
 
         return self.n_color
 
-    def porcentaje(self):
-        porcentajes = []
+    def percentage(self):
+        percentages = []
         for i in range(self.centers.shape[0]):
             p_color = np.count_nonzero(self.labels == i) / self.labels.shape[0]
-            porcentajes.append(p_color)
-        return porcentajes
+            percentages.append(p_color)
+        return percentages
 
-    def orientacion(self):
-        # Retorna la orientacion de las lineas de la bandera
+    def orientation(self):
+        # Returns the orientation of the lines of the flag from the image
         high_thresh = 300
         bw_edges = cv2.Canny(self.im, high_thresh * 0.3, high_thresh, L2gradient=True)
         hough_obj = hough(bw_edges)
@@ -59,25 +59,26 @@ class Bandera:
                 orient_str = "Horizontal"
 
         if (vert and horiz):
-            orient_str = "Mixta"
+            orient_str = "Mixed"
 
         return orient_str
 
 
 def color_seg(im_array):
-    # Encuentra el número de clusters de 1 a 4 que tenga la mínima distancia intracluster
+    # Finds the number of clusters from 1 to 4 that have the minimum intra-cluster distance
     im_array_sample = shuffle(im_array, random_state=0)[:10000]
     num_clusters = 4
-    distancias = np.zeros((num_clusters, 1))
+    distances = np.zeros((num_clusters, 1))
     for n_color in range(1, num_clusters + 1):
-        # Para n_color calcular clustering
+        # Compute clustering for n_color
         model = KMeans(n_clusters=n_color, random_state=0).fit(im_array_sample)
         labels = model.predict(im_array)
         centers = model.cluster_centers_
-        distancias[n_color - 1] = model.inertia_
+        distances[n_color - 1] = model.inertia_
 
-    # Solo toma la primera ocurrencia del mínimo
-    n_color = int(distancias.argmin()) + 1
+    # Only takes the first occurence of the minimum
+    distances = np.around(distances, decimals=3)
+    n_color = int(distances.argmin()) + 1
     # model = KMeans(n_clusters=n_color, random_state=0).fit(im_array_sample)
     # labels = model.predict(im_array)
     # centers = model.cluster_centers_

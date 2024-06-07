@@ -1,7 +1,8 @@
 import cv2
+import os
 
 if __name__ == '__main__':
-    path_file = "imgs/old_text.png"
+    path_file = os.path.join(os.path.dirname(__file__), 'imgs/old_text.png')
     image = cv2.imread(path_file)
     image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 

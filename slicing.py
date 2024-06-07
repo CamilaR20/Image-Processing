@@ -3,7 +3,7 @@ import numpy as np
 import os
 
 if __name__ == '__main__':
-    path_file = "imgs/lena.png"
+    path_file = os.path.join(os.path.dirname(__file__), 'imgs/lena.png')
     image = cv2.imread(path_file)
     image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 

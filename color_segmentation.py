@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-import sys
 import os
 
 import matplotlib.pyplot as plt
@@ -30,9 +29,7 @@ def recreate_image(centers, labels, rows, cols):
 
 
 if __name__ == '__main__':
-    path = sys.argv[1]
-    image_name = sys.argv[2]
-    path_file = os.path.join(path, image_name)
+    path_file = os.path.join(os.path.dirname(__file__), 'imgs/flag.png')
     image = cv2.imread(path_file)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
@@ -40,9 +37,7 @@ if __name__ == '__main__':
     method = ['kmeans', 'gmm']
     select = 0
 
-    # Convert to floats instead of the default 8 bits integer coding. Dividing by
-    # 255 is important so that plt.imshow behaves works well on float data (need to
-    # be in the range [0-1])
+    # Convert to floats instead of the default 8 bits integer coding. Dividing by 255 is important so that plt.imshow works well 
     image = np.array(image, dtype=np.float64) / 255
 
     # Load Image and transform to a 2D numpy array.

@@ -2,7 +2,6 @@ import cv2
 from camera_model import *
 
 if __name__ == '__main__':
-
     # intrinsics parameters
     fx = 1000
     fy = 1000

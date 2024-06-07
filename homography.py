@@ -12,9 +12,9 @@ def click(event, x, y, flags, param):
 
 
 if __name__ == '__main__':
-    path = sys.argv[1]
-    image_name = sys.argv[2]
-    path_file = os.path.join(path, image_name)
+    # Computes the transformation matrix to transform the image in a way that a set of points chosen by the user (red) project to another set of points (blue)
+    # Click on the image to choose the each set of points pressing 'x' after each set
+    path_file = os.path.join(os.path.dirname(__file__), 'imgs/lena.png')
     image = cv2.imread(path_file)
     image_draw = np.copy(image)
 

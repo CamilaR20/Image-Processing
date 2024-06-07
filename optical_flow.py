@@ -20,9 +20,7 @@ class Methods(Enum):
 
 
 if __name__ == '__main__':
-    path = sys.argv[1]
-    video_name = sys.argv[2]
-    path_file = os.path.join(path, video_name)
+    path_file = os.path.join(os.path.join(os.path.dirname(__file__), 'imgs/vtest.avi'))
     camera = cv2.VideoCapture(path_file)
     flag = True
 

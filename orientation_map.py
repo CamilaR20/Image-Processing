@@ -2,7 +2,7 @@ import os
 from orientation_estimate import *
 
 if __name__ == '__main__':
-    path_file = "imgs/soccer.png"
+    path_file = os.path.join(os.path.dirname(__file__), 'imgs/soccer.png')
     image = cv2.imread(path_file)
     image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 

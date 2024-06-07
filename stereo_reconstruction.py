@@ -34,7 +34,7 @@ def write_ply(fn, verts, colors):
 
 def main():
     print('loading images...')
-    path = sys.argv[1]
+    path = os.path.join(os.path.dirname(__file__), 'imgs/teddy')
     path_file1 = os.path.join(path, 'im1.png')
     path_file2 = os.path.join(path, 'im2.png')
     imgL = cv.pyrDown(cv.imread(path_file1))

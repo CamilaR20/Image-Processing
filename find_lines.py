@@ -1,10 +1,10 @@
 from hough import hough
-#from orientation_estimate import *
 import cv2
 import numpy as np
+import os
 
 if __name__ == '__main__':
-    path_file = "imgs/flag3.png"
+    path_file = os.path.join(os.path.dirname(__file__), 'imgs/flag3.png')
     image = cv2.imread(path_file)
 
     high_thresh = 300

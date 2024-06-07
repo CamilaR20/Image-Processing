@@ -12,7 +12,7 @@ def sqrt_mse(im1, im2):
 
 
 if __name__ == '__main__':
-    image = cv2.imread("imgs/lena.png")
+    image = cv2.imread(os.path.join(os.path.dirname(__file__), '../imgs/lena.png'))
     im_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     # Imagen con ruido s&p

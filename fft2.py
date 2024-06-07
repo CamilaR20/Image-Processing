@@ -1,11 +1,12 @@
 import cv2
 import numpy as np
+import os
 
 
 class fftClass:
     def __init__(self, im_gray, show=False):
-        """Recibe una imagen en grises y guarda en el objeto"""
-        # Verifica que la imagen sea cuadrada
+        """Receives a grayscale image and saves it in the object"""
+        # Check image is square
         width, height = im_gray.shape
         self.im_size = max(width, height)
         if width == height:
@@ -19,7 +20,7 @@ class fftClass:
             new_im[((height-width) // 2):((height+width) // 2), :] = im_gray
             self.image = new_im
 
-        # Calcular FFT y guardar en el objeto
+        # Compute fft
         self.im_fft = np.fft.fft2(self.image)
         self.fft_shift = np.fft.fftshift(self.im_fft)
 
@@ -30,7 +31,7 @@ class fftClass:
             cv2.waitKey(0)
 
     def show(self):
-        """Muestra fft de la imagen por 10s"""
+        """Shows fft of the image for 10s"""
         fft_view = np.absolute(self.fft_shift)
         fft_view = np.log(fft_view + np.finfo(np.float32).eps)
         fft_view = fft_view / np.max(fft_view)
@@ -39,8 +40,7 @@ class fftClass:
         cv2.waitKey(0)
 
     def LPfilter(self, fc=0.5, show=False):
-        """Recibe fc (0<fc<1) y muestra fft de la imagen al filtrar
-        con un filtro pasa bajas"""
+        """Receives fc (0<fc<1) and shows the fft of the image after a LP filter with cutoff frequency fc"""
         # create a low pass filter mask
         enum_square = np.linspace(0, self.im_size - 1, self.im_size)
         col_iter, row_iter = np.meshgrid(enum_square, enum_square)
@@ -71,8 +71,7 @@ class fftClass:
         return im_filt
 
     def BPfilter(self, f1=0.1, f2=0.6, show=False):
-        """Recibe f1 y f2 (0<f1<f2<1) y muestra fft de la imagen al
-        filtrar con un filtro pasa banda"""
+        """Receives f1 y f2 (0<f1<f2<1) and shows the fft of the image after a passband filter"""
         enum_square = np.linspace(0, self.im_size - 1, self.im_size)
         col_iter, row_iter = np.meshgrid(enum_square, enum_square)
         half_size = (self.im_size / 2 - 1)
@@ -111,8 +110,7 @@ class fftClass:
 
 
     def HPfilter(self, fc=0.5, show=False):
-        """Recibe fc (0<fc<1) y muestra fft de la imagen al
-        filtrar con un filtro pasa altas"""
+        """Receives fc (0<fc<1) and shows the fft of the image after a HP filter with cutoff frequency fc"""
         # create a high pass filter mask
         enum_square = np.linspace(0, self.im_size - 1, self.im_size)
         col_iter, row_iter = np.meshgrid(enum_square, enum_square)
@@ -144,16 +142,18 @@ class fftClass:
 
 
 if __name__ == '__main__':
-    im_dog = cv2.imread("imgs/dog.png")
+    path_file = os.path.join(os.path.dirname(__file__), 'imgs/dog.png')
+    im_dog = cv2.imread(path_file)
     gray_dog = cv2.cvtColor(im_dog, cv2.COLOR_BGR2GRAY)
     fft_dog = fftClass(gray_dog)
     # fft_dog.show()
     filt_dog = fft_dog.LPfilter(0.1)
 
-    im_cat = cv2.imread("imgs/cat.png")
+    path_file = os.path.join(os.path.dirname(__file__), 'imgs/cat.png')
+    im_cat = cv2.imread(path_file)
     gray_cat = cv2.cvtColor(im_cat, cv2.COLOR_BGR2GRAY)
     fft_cat = fftClass(gray_cat)
-    # fft_einstein.show()
+    # fft_cat.show()
     filt_cat= fft_cat.HPfilter(0.25)
 
     new_im = cv2.addWeighted(filt_cat, 0.5, filt_dog, 0.5, 0)
@@ -161,9 +161,10 @@ if __name__ == '__main__':
     cv2.imshow("Hybrid", new_im)
     cv2.waitKey(0)
 
+    # Example of the filters
     # img_gray = 255*np.ones((256,512), dtype=np.uint8)
+    # im_fft = fftClass(img_gray)
     # im_fft.show()
-    # im_fft.LPfilter(0.5)
-    # im_fft.HPfilter(0.2)
-    # im_fft.BPfilter()
-
+    # im_fft.LPfilter(0.5, True)
+    # im_fft.HPfilter(0.2, True)
+    # im_fft.BPfilter(show=True)

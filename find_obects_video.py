@@ -5,9 +5,7 @@ import os
 # Find people in video.avi (Background substraction, thresholds,
 # morphological operations, contours)
 if __name__ == '__main__':
-    path = sys.argv[1]
-    image_name = sys.argv[2]
-    path_file = os.path.join(path, image_name)
+    path_file = os.path.join(os.path.dirname(__file__), 'imgs/vtest.avi')
 
     # load video
     camera = cv2.VideoCapture(path_file)

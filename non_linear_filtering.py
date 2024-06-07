@@ -4,11 +4,11 @@ from noise import noise
 import os
 
 if __name__ == '__main__':
-    image = cv2.imread("imgs/lena.png")
+    image = cv2.imread(os.path.join(os.path.dirname(__file__), 'imgs/lena.png'))
     image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     # add noise
-    image_gray_noisy = noise("poisson", image_gray.astype(np.float) / 255)
+    image_gray_noisy = noise("poisson", image_gray.astype(float) / 255)
     image_gray_noisy = (255 * image_gray_noisy).astype(np.uint8)
 
     # median
