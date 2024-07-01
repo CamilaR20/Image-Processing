@@ -10,13 +10,13 @@ class geomTransform:
         self.M_affine = cv2.getAffineTransform(pts1, pts2)
 
     def affineTransform(self, image):
-        # Computar transformación afin de la imagen ingresada como parámetro y mostrar
+        # Compute affine transform of image and show it
         image_affine = cv2.warpAffine(image, self.M_affine, image.shape[:2])
-        cv2.imshow("Image Affine", image_affine)
+        cv2.imshow("Affine transform of image", image_affine)
         cv2.waitKey(0)
 
     def estSimilarity(self):
-        # Estimar parámetros de escala, rotación y traslación a partir de la matriz de transformación afin
+        # Estimate rotation, translation and scale parameters from affine transform matrix
         s0 = np.sqrt(self.M_affine[0, 0] ** 2 + self.M_affine[1, 0] ** 2)
         s1 = np.sqrt(self.M_affine[0, 1] ** 2 + self.M_affine[1, 1] ** 2)
         theta = -np.arctan(self.M_affine[1, 0] / self.M_affine[0, 0])
@@ -28,14 +28,13 @@ class geomTransform:
              [-s0 * np.sin(theta), s1 * np.cos(theta), (s1 * x1 * np.cos(theta) - s0 * x0 * np.sin(theta))]])
 
     def similarityTransform(self, image):
-        # Computar transformación de similitud de la imagen ingresada como parámetro y mostrar
+        # Compute similarity transform of image and show it
         image_similarity = cv2.warpAffine(image, self.M_sim, image.shape[:2])
         cv2.imshow("Image Similarity", image_similarity)
         cv2.waitKey(0)
 
     def similarityError(self):
-        # Calcular transformación de similitud sobre los puntos1 guardados en el objeto y calcular
-        # error respecto a puntos2
+        # Compute similarity transformation over pts1 and compute error wrt pts 2
         M_pts = np.append(self.M_sim, np.array([[0, 0, 1]]), axis=0)
         pts = np.append(self.pts1.transpose(), np.array([[1, 1, 1]]), axis=0)
         pts_transform = np.matmul(M_pts, pts)
@@ -49,27 +48,25 @@ class geomTransform:
 
 
 def capturePoints(event, x, y, flags, params):
-    # Función para capturar eventos con el mouse
+    # Capture mouse events
     global refPt
     if event == cv2.EVENT_LBUTTONDOWN:
         refPt.append((x, y))
         # print(refPt)
 
 if __name__ == '__main__':
-    # Path de imagen1 e imagen2
-    path = sys.argv[1]
-    image_name1 = sys.argv[2]
-    image_name2 = sys.argv[3]
-    path_file1 = os.path.join(path, image_name1)
-    path_file2 = os.path.join(path, image_name2)
+    # Paths of image 1 and 2
+    path = os.path.dirname(__file__)
+    path_file1 = os.path.join(path, '../imgs/lena.png')
+    path_file2 = os.path.join(path, '../imgs/lena_warped.png')
 
-    # Leer imágenes y garantizar que sean cuadradas
+    # Read images and guarantee width = height
     image1 = cv2.imread(path_file1)
     image1 = cv2.resize(image1, (512, 512), interpolation=cv2.INTER_CUBIC)
     image2 = cv2.imread(path_file2)
     image2 = cv2.resize(image2, (512, 512), interpolation=cv2.INTER_CUBIC)
 
-    # Mostrar imagen 1 y capturar puntos indicados con el mouse
+    # Show image 1 and capture points indicated with the mouse: expects 3 points
     refPt = []
     cv2.imshow('Image1', image1)
     cv2.setMouseCallback('Image1', capturePoints)
@@ -77,7 +74,7 @@ if __name__ == '__main__':
     puntos1 = refPt
     pts1 = np.float32(puntos1)
 
-    # Mostrar imagen 2 y capturar puntos indicados con el mouse
+    # Show image 2 and capture points indicated with the mouse: expects 3 points
     refPt = []
     cv2.imshow('Image2', image2)
     cv2.setMouseCallback('Image2', capturePoints)
@@ -85,17 +82,15 @@ if __name__ == '__main__':
     puntos2 = refPt
     pts2 = np.float32(puntos2)
 
-    # Calcular matriz de transformación afin (al crear objeto), transformar imagen 1 y mostrar
+    # Compute affine transform matrix, transform image 1 and show result
     affine = geomTransform(pts1, pts2)
     affine.affineTransform(image1)
 
-    # Estimar parámetros y calcular matriz de similitud
+    # Compute similarity transformation and show result
     affine.estSimilarity()
-    # Mostrar imagen1 transformada por matriz de similitud estimada
     affine.similarityTransform(image1)
 
-    # Calcular transformación de similitud sobre los puntos capturados de la imagen1 y mostrar error
-    # respecto a los puntos capturados de la imagen 2
+    # Compute difference betweeen the transformation of image 1 and image 2
     affine.similarityError()
 
 

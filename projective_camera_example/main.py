@@ -5,10 +5,8 @@ import numpy as np
 from camera_model import *
 
 if __name__ == '__main__':
-    # Leer archivo json con parámetros intrínsecos de la cámara y posición
-    path = '/Users/camilaroa/Documents/Camila/PycharmProjects/ProcesamientoImagenes'
-    file_name = 'punto2b.json'
-    json_file = os.path.join(path, file_name)
+    # Read json files with intrinsic parameters of the camera and the position
+    json_file = os.path.join(os.path.dirname(__file__), 'camera_parameters1.json')
 
     with open(json_file) as fp:
         json_data = json.load(fp)
@@ -16,18 +14,18 @@ if __name__ == '__main__':
     K, d, h, tilt, pan = json_data.values()
     K = np.array(K)
 
-    # Dimensiones de la imagen dada la cámara 768×1024
+    # Dimensions of the image given the camera 768×1024: replace with appropriate vakues
     width = 768
     height = 1024
 
-    # Parámetros extrínsecos de la cámara
+    # Extrinsic parameters for the camera
     R = set_rotation(tilt, pan, 0)
     t = np.array([0, -d, h])
 
-    # Crear modelo de cámara
+    # Create camerea model
     camera = ProjectiveCamera(K, width, height, R, t)
 
-    # Dibujar cubo proyectado
+    # Draw projected cube
     side = 1
     cube_3D = np.array([[0, 0, 0], [side, 0, 0], [side, side, 0], [0, side, 0],
                         [0, side, side], [side, side, side], [side, 0, side], [0, 0, side]])
